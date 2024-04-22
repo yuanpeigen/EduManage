@@ -31,6 +31,7 @@ CREATE TABLE `users` (
 CREATE TABLE `departments` (
   `department_id` INT AUTO_INCREMENT PRIMARY KEY,
   `department_name` VARCHAR(255) NOT NULL UNIQUE,
+  `department_no` INT,
   `description` TEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -41,6 +42,7 @@ CREATE TABLE `employees` (
   `department_id` INT,
   `name` VARCHAR(255) NOT NULL,
   `role_type_id` INT,
+  `sex` ENUM('W', 'M') NOT NULL,
   FOREIGN KEY (`phone`) REFERENCES `users` (`phone`),
   FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
