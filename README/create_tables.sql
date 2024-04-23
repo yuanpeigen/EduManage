@@ -23,26 +23,32 @@ CREATE TABLE `users` (
   `password` VARCHAR(255) NOT NULL,
   `photo` INT,
   `status` TINYINT(1) NOT NULL,
-  `user_type` ENUM('A', 'B') NOT NULL,
+  `user_type` ENUM('S', 'T') NOT NULL,
   FOREIGN KEY (`photo`) REFERENCES `files` (`file_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 部门表 (departments)
 CREATE TABLE `departments` (
-  `department_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `department_name` VARCHAR(255) NOT NULL UNIQUE,
-  `department_no` INT,
-  `description` TEXT
+  `department_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '部门ID',
+  `department_name` VARCHAR(255) NOT NULL UNIQUE COMMENT '部门名称',
+  `department_no` INT COMMENT '部门序号',
+  `create_time` DATETIME NOT NULL COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL COMMENT '修改时间',
+  `description` TEXT COMMENT '备注'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 员工表 (employees)
 CREATE TABLE `employees` (
-  `employee_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `phone` VARCHAR(20),
-  `department_id` INT,
-  `name` VARCHAR(255) NOT NULL,
-  `role_type_id` INT,
-  `sex` ENUM('W', 'M') NOT NULL,
+  `employee_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '员工ID',
+  `name` VARCHAR(255) NOT NULL COMMENT '员工姓名',
+  `gender` ENUM('W', 'M') NOT NULL COMMENT '性别W女M男',
+  `image` VARCHAR(255) COMMENT '图像'，
+  `role_type_id` INT COMMENT '员工角色类型，关联字典表',
+  `entrydate` DATE COMMENT '入职时间',
+  `department_id` INT COMMENT '部门ID',
+  `create_time` DATETIME NOT NULL COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL COMMENT '修改时间',
+  `phone` VARCHAR(20) COMMENT '员工电话号码',  
   FOREIGN KEY (`phone`) REFERENCES `users` (`phone`),
   FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
