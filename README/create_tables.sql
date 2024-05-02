@@ -52,7 +52,7 @@ CREATE TABLE `classes` (
   `classroom` VARCHAR(255) COMMENT '教室',
   `start_time` DATE NOT NULL COMMENT '开课时间',
   `finish_time` DATE NOT NULL COMMENT '节课时间',
-  `classmaster_id` VARCHAR(255) NOT NULL COMMENT '班主任ID',
+  `classmaster_id` INT NOT NULL COMMENT '班主任ID',
   FOREIGN KEY (`classmaster_id`) REFERENCES `employees` (`employee_id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -86,7 +86,7 @@ CREATE TABLE `course_schedules` (
   `start_time` TIME NOT NULL COMMENT'开课时间',
   `end_time` TIME NOT NULL COMMENT'节课时间',
   `days_of_week` VARCHAR(20) COMMENT'上课日'
-  `teacher_id` VARCHAR(255) NOT NULL COMMENT '教师ID',
+  `teacher_id` INT NOT NULL COMMENT '教师ID',
   FOREIGN KEY (`teacher_id`) REFERENCES `employees` (`employee_id`)
   FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`),
   FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`)
