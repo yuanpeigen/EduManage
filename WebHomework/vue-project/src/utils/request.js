@@ -3,7 +3,7 @@ import router from "@/router";
 
 // 创建可一个新的axios对象
 const request = axios.create({
-    // baseURL:            // 后端的接口地址
+    baseURL: "http://localhost:8080",// 后端的接口地址
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json;charset=utf-8'
