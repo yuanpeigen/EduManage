@@ -79,6 +79,7 @@ CREATE TABLE `courses` (
 
 -- 课程安排表 (course_schedules)
 CREATE TABLE `course_schedules` (
+<<<<<<< HEAD
   `schedule_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '课程安排表ID',
   `course_id` INT COMMENT '课程ID',
   `class_id` INT COMMENT '班级ID',
@@ -87,6 +88,16 @@ CREATE TABLE `course_schedules` (
   `days_of_week` VARCHAR(20) COMMENT '上课日',
   `teacher_id` INT NOT NULL COMMENT '教师ID',
   FOREIGN KEY (`teacher_id`) REFERENCES `employees` (`employee_id`),
+=======
+  `schedule_id` INT AUTO_INCREMENT PRIMARY KEY COMMENT'课程安排表ID',
+  `course_id` INT COMMENT'课程ID',
+  `class_id` INT COMMENT'班级ID',
+  `start_time` TIME NOT NULL COMMENT'开课时间',
+  `end_time` TIME NOT NULL COMMENT'节课时间',
+  `days_of_week` VARCHAR(20) COMMENT'上课日'
+  `teacher_id` INT NOT NULL COMMENT '教师ID',
+  FOREIGN KEY (`teacher_id`) REFERENCES `employees` (`employee_id`)
+>>>>>>> a0d6d8709e9c3d310ff7b9a9417a69ed1d9b9da7
   FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`),
   FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
