@@ -44,12 +44,6 @@ public class EmpServiceImpl implements EmpService {
     }
 
     @Override
-    public Emp getById(Integer id) {
-        return empMapper.getById(id);
-    }
-
-    //  @Transactional
-    @Override
     public void update(Emp emp) {
         emp.setUpdateTime(LocalDateTime.now());
         empMapper.update(emp);

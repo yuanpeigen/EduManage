@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.hitwh.homework.mapper.StudentMapper">
+    <!--条件查询-->
+    <select id="list" resultType="edu.hitwh.homework.pojo.Student">
+        select * from students
+        <where>
+            <if test="name != null and name != ''">
+                name like concat('%', #{name}, '%')
+            </if>
+            <if test="studentId != null and studentId != ''">
+                student_id like concat('%', #{studentId}, '%')
+            </if>
+            <if test="topDegree != null and topDegree != ''">
+                and top_degree = #{topDegree}
+            </if>
+            <if test="classId != null and classId != ''">
+                and class_id = #{classId}
+            </if>
+        </where>
+    </select>
+    <!--  批量删除-->
+    <delete id="delete">
+        delete from students
+        where student_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <!--更新学生-->
+    <update id="update">
+        update students
+        <set>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="topDegree != null and topDegree != ''">
+                top_degree = #{topDegree},
+            </if>
+            <if test="classId != null and classId != ''">
+                class_id = #{classId},
+            </if>
+            <if test="disciplinaryNumber != null and disciplinaryNumber != ''">
+                disciplinary_number = #{disciplinaryNumber},
+            </if>
+            <if test="disciplinaryScore != null and disciplinaryScore != ''">
+                disciplinary_score = #{disciplinaryScore},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where student_id = #{studentId}
+    </update>
+
+</mapper>

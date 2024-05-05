@@ -1,69 +1,134 @@
 <template>
     <div>
         <div>
-            <el-input style="width: 200px; margin: 0 5px" placeholder="查询" v-model="searchContext" clearable></el-input>
-            <el-button type="primary" @click="save(1)">查询</el-button>
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item label="学员姓名">
+                    <el-input v-model="searchName" placeholder="请输入班级名称"></el-input>
+                </el-form-item>
+                <el-form-item label="学号">
+                    <el-input v-model="searchId" placeholder="请输入学号"></el-input>
+                </el-form-item>
+                <el-form-item label="最高学历">
+                    <el-select v-model="searchDegree" placeholder="请选择">
+                        <el-option label="初中" value="1"></el-option>
+                        <el-option label="高中" value="2"></el-option>
+                        <el-option label="大专" value="3"></el-option>
+                        <el-option label="本科" value="4"></el-option>
+                        <el-option label="硕士" value="5"></el-option>
+                        <el-option label="博士" value="6"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属班级">
+                    <el-select v-model="searchClassId" placeholder="请选择">
+                        <el-option v-for="entityClass in classList" :key="entityClass.classId"
+                            :label="entityClass.className" :value="entityClass.classId"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" @click="search">查询</el-button>
+
+                </el-form-item>
+            </el-form>
         </div>
         <div style="margin: 10px 0">
-            <el-button type="primary" plain @click="handleAdd">新增</el-button>
+            <el-button type="primary" plain @click="handleAdd">新增班级</el-button>
             <el-button type="danger" plain @click="delBatch">批量删除</el-button>
         </div>
 
         <el-table :data="tableData" stripe :header-cell-style="{ backgroundColor: 'aliceblue', color: '#666' }"
             @selection-change="handleSelectionChange" :row-key="getRowKeys">
-            <el-table-column type="selection" width="55" align="center" reserve-selection></el-table-column>
-            <el-table-column prop="name" label="姓名" align="center" sortable></el-table-column>
-            <el-table-column prop="id" label="学号" width="70" align="center" sortable></el-table-column>
-            <el-table-column prop="class" label="班级"></el-table-column>
-            <el-table-column prop="gender" label="性别"></el-table-column>
-            <el-table-column prop="phone" label="手机号"></el-table-column>
-            <el-table-column prop="topDegree" label="最高学历"></el-table-column>
-            <el-table-column prop="disciplinaryNumber" label="违纪次数"></el-table-column>
-            <el-table-column prop="disciplinaryScore" label="违纪扣分"></el-table-column>
-            <el-table-column prop="updateTime" label="最后操作时间"></el-table-column>
+            <el-table-column type="selection" width="45" align="center" reserve-selection></el-table-column>
+            <el-table-column prop="name" label="姓名" align="center" width="100"></el-table-column>
+            <el-table-column prop="studentId" label="学号" width="150" align="center" sortable></el-table-column>
+            <el-table-column prop="classId" label="班级" width="100" align="center">
+                <template slot-scope="scope">
+                    {{ getClassName(scope.row.classId) }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="gender" label="性别" width="100" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.gender === 1 ? '男' : '女' }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
+            <el-table-column prop="topDegree" label="最高学历" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.topDegree == 1 ? '初中' : scope.row.topDegree == 2 ? '高中' : scope.row.topDegree == 3 ?
+                        '大专' : scope.row.topDegree == 4 ? '本科'
+                            : scope.row.topDegree == 5 ? '硕士' : scope.row.topDegree == 6 ? '博士' : '其他'
+                    }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="disciplinaryNumber" label="违纪次数" align="center"></el-table-column>
+            <el-table-column prop="disciplinaryScore" label="违纪扣分" align="center"></el-table-column>
+            <el-table-column prop="updateTime" label="最后操作时间" align="center">
+                <template slot-scope="scope">
+                    {{
+                        scope.row.updateTime.replace('T', ' ')
+                    }}
+                </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" width="220px">
                 <template v-slot="scope">
                     <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button size="mini" type="warning" plain @click="disciplinary(scope.row.id)">违纪</el-button>
-                    <el-button size="mini" type="danger" plain @click="del(scope.row.id)">删除</el-button>
+                    <el-button size="mini" type="warning" plain @click="disciplinary(scope.row)">违纪</el-button>
+                    <el-button size="mini" type="danger" plain @click="del(scope.row.studentId)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <div style="margin: 10px 0">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNum"
-                :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+                :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
         </div>
         <!-- 编辑个人信息 -->
         <el-dialog title="个人信息" :visible.sync="fromVisible" width="30%">
-            <el-form :model="form" label-width="80px" style="padding-right: 20px" ref="formRef">
+            <el-form :model="form" label-width="80px" style="padding-right: 20px">
                 <el-form-item label="姓名" prop="name">
-                    <el-input v-model="form.name" placeholder="姓名"></el-input>
+                    <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="学号" prop="id">
-                    <el-input v-model="form.id" placeholder="学号"></el-input>
+                <el-form-item label="学号" prop="studentId" v-if="form.updateTime">
+                    <el-input v-model="form.studentId" placeholder="请输入学号" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="班级" prop="class">
-                    <el-input v-model="form.class" placeholder="班级"></el-input>
+                <el-form-item label="学号" prop="studentId" v-else>
+                    <el-input v-model="form.studentId" placeholder="请输入学号"></el-input>
+                </el-form-item>
+                <el-form-item label="班级" prop="classId">
+                    <el-select v-model="form.classId" placeholder="请选择班级">
+                        <el-option v-for="entityClass in classList" :key="entityClass.classId"
+                            :label="entityClass.className" :value="entityClass.classId"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="性别" prop="gender">
                     <el-radio-group v-model="form.gender">
-                        <el-radio label="男"></el-radio>
-                        <el-radio label="女"></el-radio>
+                        <el-radio :label="1">男</el-radio>
+                        <el-radio :label="2">女</el-radio>
                     </el-radio-group>
+                </el-form-item>
+                <el-form-item label="出生日期" prop="dateOfBirth">
+                    <el-date-picker value="form.dateOfBirth" v-model="form.dateOfBirth" type="date"
+                        placeholder="请选择出生日期"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="手机号" prop="phone">
                     <el-input v-model="form.phone" placeholder="手机号"></el-input>
                 </el-form-item>
                 <el-form-item label="最高学历" prop="topDegree">
-                    <el-input v-model="form.topDegree" placeholder="最高学历"></el-input>
+                    <el-select v-model="form.topDegree" placeholder="请选择最高学历">
+                        <el-option label="初中" value="1"></el-option>
+                        <el-option label="高中" value="2"></el-option>
+                        <el-option label="大专" value="2"></el-option>
+                        <el-option label="本科" value="2"></el-option>
+                        <el-option label="硕士" value="2"></el-option>
+                        <el-option label="博士" value="2"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="违纪次数" prop="disciplinaryNumber">
+                <el-form-item label="违纪次数" prop="disciplinaryNumber" v-if="form.updateTime">
                     <el-input v-model="form.disciplinaryNumber" placeholder="违纪次数"></el-input>
                 </el-form-item>
-                <el-form-item label="违纪扣分" prop="disciplinaryScore">
+                <el-form-item label="违纪扣分" prop="disciplinaryScore" v-if="form.updateTime">
                     <el-input v-model="form.disciplinaryScore" placeholder="违纪扣分"></el-input>
                 </el-form-item>
             </el-form>
@@ -74,10 +139,9 @@
         </el-dialog>
         <!-- 违纪处分对话框 -->
         <el-dialog title="违纪处分" :visible.sync="disciplinaryVisible" width="30%">
-            <el-form :model="disciplinaryForm" label-width="80px" style="padding-right: 20px" :rules="disciplinaryRules"
-                ref="disciplinaryFormRef">
+            <el-form :model="disciplinaryForm" label-width="80px" style="padding-right: 20px">
                 <el-form-item label="扣分分数" prop="score">
-                    <el-input v-model="disciplinaryForm.score" placeholder="请输入扣分分数"></el-input>
+                    <el-input v-model="disciplinaryForm.score" placeholder="请输入扣分分数" type="number"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -85,59 +149,40 @@
                 <el-button type="primary" @click="handleDisciplinary">确 定</el-button>
             </div>
         </el-dialog>
-
     </div>
 </template>
 
 <script>
+
 export default {
     name: "StudentManagement",
     data() {
         return {
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }],  // 所有的数据
+            tableData: [],  // 所有的数据
             pageNum: 1,   // 当前的页码
             pageSize: 5,  // 每页显示的个数
-            searchContext: '',
+            searchName: '',
+            searchId: '',
+            searchDegree: '',
+            searchClassId: '',
+            dateRange: "",
             total: 0,
+            ids: [],
             fromVisible: false,
             form: {},
+            classList: [],
             disciplinaryVisible: false,
             disciplinaryForm: {
-                score: ''
+                score: 0
             },
-            disciplinaryRules: {
-                score: [
-                    { required: true, message: '请输入扣分分数', trigger: 'blur' },
-                    { pattern: /^[0-9]+$/, message: '扣分分数必须为数字', trigger: 'blur' }
-                ]
-            },
-            user: JSON.parse(localStorage.getItem('local-user') || '{}'),
-            ids: []
         }
     },
     created() {
         this.load()
     },
     methods: {
-        disciplinary(row) {
-            this.disciplinaryVisible = true;
-            this.disciplinaryForm.score = '';
-            this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
-        },
-        handleDisciplinary() {
-            this.$refs.disciplinaryFormRef.validate((valid) => {
-                if (valid) {
-                    // 执行违纪处分逻辑
-                    this.form.disciplinaryNumber += 1;
-                    this.form.disciplinaryScore += this.disciplinaryForm.score;
-                    this.save();
-                    this.disciplinaryVisible = false;
-                }
-            });
+        search() {
+            this.load()
         },
         delBatch() {
             if (!this.ids.length) {
@@ -145,92 +190,137 @@ export default {
                 return
             }
             this.$confirm('您确认批量删除这些数据吗？', '确认删除', { type: "warning" }).then(() => {
-                this.$request.delete('/user/delete/batch', { data: this.ids }).then(res => {
-                    if (res.code === '200') {   // 表示操作成功
+                this.$request.delete(`/student/${this.ids}`).then(res => {
+
+                    if (res.code === 200) {   // 表示操作成功
                         this.$message.success('操作成功')
+                        this.load()
                     } else {
                         this.$message.error(res.msg)  // 弹出错误的信息
                     }
                 })
             }).catch(() => { })
         },
-        handleSelectionChange(rows) {   // 当前选中的所有的行数据
-            this.ids = rows.map(v => v.id)
+        disciplinary(row) {
+            this.disciplinaryVisible = true;
+            this.disciplinaryForm.score = '';
+            this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
+        },
+        handleDisciplinary() {
+            // 执行违纪处分逻辑
+            this.form.disciplinaryNumber += 1;
+            this.form.disciplinaryScore += parseInt(this.disciplinaryForm.score);
+            console.log(8888888888888888, this.form.disciplinaryScore);
+            this.save();
+            this.disciplinaryVisible = false;
+
         },
         del(id) {
             this.$confirm('您确认删除吗？', '确认删除', { type: "warning" }).then(() => {
-                this.$request.delete('/user/delete/' + id).then(res => {
-                    if (res.code === '200') {   // 表示操作成功
+                this.$request.delete(`/student/${id}`).then(res => {
+                    if (res.code === 200) {   // 表示操作成功
                         this.$message.success('操作成功')
+                        this.load()
                     } else {
                         this.$message.error(res.msg)  // 弹出错误的信息
                     }
                 })
             }).catch(() => { })
         },
-        handleEdit(row) {   // 编辑数据
-            this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
-            this.fromVisible = true   // 打开弹窗
+        handleAdd() {
+            this.fromVisible = true; // 打开新增班级的弹窗
+            this.form = {}; // 清空表单数据
         },
-        handleAdd() {   // 新增数据
-            this.fromVisible = true   // 打开弹窗
+        handleEdit(row) {
+            this.form = JSON.parse(JSON.stringify(row)); // 深拷贝数据，避免直接修改表格中的数据影响到弹窗中的数据
+            this.fromVisible = true; // 打开编辑班级的弹窗
         },
-        save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
-            this.$refs.formRef.validate((valid) => {
-                if (valid) {
-                    this.form.updateTime = this.getCurrentDateTime();
-                    this.$request({
-                        url: this.form.id ? '/student/update' : '/student/add',
-                        method: this.form.id ? 'PUT' : 'POST',
-                        data: this.form
-                    }).then(res => {
-                        if (res.code === '200') {  // 表示成功保存
-                            this.$message.success('保存成功')
-                            this.fromVisible = false
-                        } else {
-                            this.$message.error(res.msg)  // 弹出错误的信息
-                        }
-                    })
-                }
+        load() {
+            let params = {
+                pageNum: this.pageNum,
+                pageSize: this.pageSize,
+                name: this.searchName,
+                id: this.searchId,
+                degree: this.searchDegree,
+                classId: this.searchClassId,
+                begin: this.dateRange[0],
+                end: this.dateRange[1],
+            }
+            this.$request.get("class").then(res => {
+                this.classList = res.data.row
+                console.log(222222222222, this.classList);
+                this.$request.get(this.makeUrl(params)).then(res => {
+                    this.tableData = res.data.row
+                    console.log(333333333333333, this.tableData);
+                    this.total = res.data.total
+                    //请求班主任
+                })
             })
         },
-        load(pageNum) {  // 分页查询
-            if (pageNum) this.pageNum = pageNum
-            this.$request.get('/student/selectByPage', {
-                params: {
-                    pageNum: this.pageNum,
-                    pageSize: this.pageSize,
-                    name: this.searchContext
-                }
-            }).then(res => {
-                this.tableData = res.data.records
-                this.total = res.data.total
-            })
+        handleSizeChange(pageSize) {
+            this.pageSize = pageSize
+            this.load()
         },
         handleCurrentChange(pageNum) {
-            this.load(pageNum)
-        },
-        handleSizeChange(pageSize) {//改变当前页面数量
-            this.pageSize = pageSize
+            this.pageNum = pageNum
+            this.load()
         },
         getRowKeys(row) {
             return row.id
         },
-        getCurrentDateTime() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        }
-
+        handleSelectionChange(rows) {
+            this.ids = rows.map(v => v.studentId)
+        },
+        save() {
+            this.$request({
+                url: '/student',
+                method: this.form.updateTime ? 'PUT' : 'POST',
+                data: this.form
+            }).then(res => {
+                if (res.code === 200) {
+                    this.$message.success('保存成功');
+                    this.fromVisible = false;
+                    this.load(); // 重新加载班级列表
+                } else {
+                    this.$message.error(res.msg);
+                }
+            });
+        },
+        makeUrl(params) {
+            const paramsList = [];
+            if (params.pageNum !== '') {
+                paramsList.push(`pageNum=${encodeURIComponent(params.pageNum)}`);
+            }
+            if (params.pageSize !== '') {
+                paramsList.push(`&pageSize=${encodeURIComponent(params.pageSize)}`);
+            }
+            if (params.name !== '') {
+                paramsList.push(`&name=${encodeURIComponent(params.name)}`);
+            }
+            if (params.name !== '') {
+                paramsList.push(`&studentId=${encodeURIComponent(params.id)}`);
+            }
+            if (params.name !== '') {
+                paramsList.push(`&topDegree=${encodeURIComponent(params.degree)}`);
+            }
+            if (params.name !== '') {
+                paramsList.push(`&classId=${encodeURIComponent(params.classId)}`);
+            }
+            if (params.begin) {
+                paramsList.push(`&begin=${encodeURIComponent(params.begin)}`);
+            }
+            if (params.end) {
+                paramsList.push(`&end=${encodeURIComponent(params.end)}`);
+            }
+            const url = `/student?${paramsList.join("")}`;
+            return url
+        },
+        getClassName(id) {
+            const foundElement = this.classList.find(item => item.classId === id);
+            return foundElement.className;
+        },
     }
 }
-
 </script>
 
 <style scoped></style>

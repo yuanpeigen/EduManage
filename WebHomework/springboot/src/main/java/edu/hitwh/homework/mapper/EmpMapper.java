@@ -14,6 +14,14 @@ import java.util.List;
 @Mapper
 public interface EmpMapper {
 
+    /**
+     * 条件查询
+     * @param name
+     * @param gender
+     * @param begin
+     * @param end
+     * @return
+     */
     List<Emp> list(String name, Short gender, LocalDate begin, LocalDate end);
 
     /**
@@ -30,13 +38,6 @@ public interface EmpMapper {
             " values(#{name},#{gender},#{image},#{job},#{entrydate},#{departmentId},#{createTime},#{updateTime})")
     void insert(Emp emp);
 
-    /**
-     * 根据ID查询员工
-     * @param id
-     * @return
-     */
-    @Select("select * from employees where  employee_id = #{id}")
-    Emp getById(Integer id);
 
     /**
      * 更新员工
@@ -47,6 +48,6 @@ public interface EmpMapper {
      * 查询所有员工
      * @return
      */
-    @Select("select * from employees")
+    @Select("select * from employees where job = 1")
     List<Emp> selectAll();
 }

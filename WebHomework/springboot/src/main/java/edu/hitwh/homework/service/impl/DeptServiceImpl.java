@@ -38,7 +38,6 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public void update(Dept dept) {
         dept.setUpdateTime(LocalDateTime.now());
-        log.info("777777777777777{}",dept);
         deptMapper.update(dept);
     }
 }

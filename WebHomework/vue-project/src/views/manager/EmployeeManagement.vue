@@ -7,8 +7,8 @@
                 </el-form-item>
                 <el-form-item label="性别">
                     <el-select v-model="searchGender" placeholder="请选择">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
+                        <el-option label="男" value="1"></el-option>
+                        <el-option label="女" value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="入职时间">
@@ -164,15 +164,16 @@ export default {
         del(id) {
             this.$confirm('您确认删除吗？', '确认删除', { type: "warning" }).then(() => {
                 this.$request.delete(`/employee/${id}`).then(res => {
-                    console.log(88888888888888, this.res);
                     if (res.code === 200) {   // 表示操作成功
                         this.$message.success('操作成功')
                         this.load()
                     } else {
                         this.$message.error(res.msg)  // 弹出错误的信息
                     }
+                }).catch(() => {
+                    this.$message.error("该人已是某班班主任,不能删除")  // 弹出错误的信息
                 })
-            }).catch(() => { })
+            }).catch()
         },
         handleAdd() {
             this.fromVisible = true; // 打开新增员工的弹窗
@@ -188,6 +189,7 @@ export default {
                 pageNum: this.pageNum,
                 pageSize: this.pageSize,
                 name: this.searchName,
+                gender: this.searchGender,
                 begin: this.dateRange[0],
                 end: this.dateRange[1],
             }
@@ -198,7 +200,6 @@ export default {
             this.$request.get('/departments').then(res => {
                 //处理数据
                 this.departmentList = res.data
-                console.log(1111111111, this.departmentList);
             })
 
         },
@@ -218,7 +219,6 @@ export default {
         },
         save() {
             this.$refs.employeeForm.validate((valid) => {
-                console.log(7777777777777777, valid);
                 if (valid) {
                     this.$request({
                         url: this.form.employeeId ? '/employee' : '/employee',

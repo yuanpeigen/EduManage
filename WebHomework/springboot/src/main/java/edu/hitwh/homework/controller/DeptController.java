@@ -66,8 +66,6 @@ public class DeptController {
      */
     @PutMapping
     public Result update(@RequestBody Dept dept) {
-
-
         log.info("修改部门:{}", dept);
         //调用service修改部门
         deptService.update(dept);

@@ -66,7 +66,6 @@ export default {
         save() {
             this.$refs.formRef.validate((valid) => {
                 if (valid) {
-                    console.log(55555555555555555555, this.form);
                     this.$request({
                         url: this.form.departmentId ? '/departments' : '/departments',
                         method: this.form.departmentId ? 'PUT' : 'POST',
@@ -107,17 +106,15 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                console.log(111111111111111, departmentId);
                 this.$request.delete(`/departments/${departmentId}`).then(res => {
                     if (res.code === 200) {
                         this.$message.success('删除成功')
                         this.load()
                     } else {
-                        console.log(2222222222222, res.code);
                         this.$message.error(res.msg)
                     }
-                })
-            }).catch(() => { })
+                }).catch(() => { this.$message.error("这个部门还有员工呢!") })
+            })
         },
         handleSelectionChange(rows) {
             this.ids = rows.map(v => v.departmentId)

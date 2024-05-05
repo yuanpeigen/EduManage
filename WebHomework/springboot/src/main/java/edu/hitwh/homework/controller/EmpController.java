@@ -24,7 +24,7 @@ public class EmpController {
 
     @GetMapping
     public Result page(@RequestParam(defaultValue = "1") Integer pageNum,
-                       @RequestParam(defaultValue = "10") Integer pageSize,
+                       @RequestParam(defaultValue = "5") Integer pageSize,
                        String name, Short gender,
                        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
                        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end){
@@ -49,17 +49,11 @@ public class EmpController {
         return Result.success();
     }
 
-    @GetMapping("/{id}")
-    public Result getById(@PathVariable Integer id){
-        log.info("根据ID查询员工信息, id: {}",id);
-        Emp emp = empService.getById(id);
-        return Result.success(emp);
-    }
 
     //选择班主任
-    @GetMapping("/all")
+    @GetMapping("/classmaster")
     public Result list(){
-        log.info("查询所有员工信息");
+        log.info("查询所有班主任信息");
         List<Emp> list = empService.list();
         return Result.success(list);
     }
