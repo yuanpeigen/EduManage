@@ -33,4 +33,10 @@ public interface StudentService {
      * @param student
      */
     void save(Student student);
+
+    /**
+     * 查询所有学生
+     * @return
+     */
+    List<Student> list();
 }

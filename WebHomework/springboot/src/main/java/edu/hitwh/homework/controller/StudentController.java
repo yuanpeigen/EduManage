@@ -1,5 +1,4 @@
 package edu.hitwh.homework.controller;
-
 import edu.hitwh.homework.pojo.PageBean;
 import edu.hitwh.homework.pojo.Result;
 import edu.hitwh.homework.pojo.Student;
@@ -32,6 +31,13 @@ public class StudentController {
         return Result.success(pageBean);
     }
 
+    //查询所有学生
+    @GetMapping("/all")
+    public Result list(){
+        log.info("查询所有学生信息");
+        List<Student> list = studentService.list();
+        return Result.success(list);
+    }
 
     @DeleteMapping("/{ids}")
     public Result delete(@PathVariable List<Integer> ids) {

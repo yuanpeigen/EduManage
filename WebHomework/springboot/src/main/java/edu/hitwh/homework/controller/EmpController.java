@@ -50,10 +50,10 @@ public class EmpController {
     }
 
 
-    //选择班主任
-    @GetMapping("/classmaster")
+    //查询所有员工
+    @GetMapping("/all")
     public Result list(){
-        log.info("查询所有班主任信息");
+        log.info("查询所有员工信息");
         List<Emp> list = empService.list();
         return Result.success(list);
     }

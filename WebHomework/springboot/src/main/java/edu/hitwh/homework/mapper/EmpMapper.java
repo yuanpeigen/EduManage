@@ -48,6 +48,6 @@ public interface EmpMapper {
      * 查询所有员工
      * @return
      */
-    @Select("select * from employees where job = 1")
+    @Select("select * from employees")
     List<Emp> selectAll();
 }

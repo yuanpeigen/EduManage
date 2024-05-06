@@ -140,8 +140,8 @@ export default {
                 this.tableData = res.data.row
                 this.total = res.data.total
                 //请求班主任
-                this.$request.get("/employee/classmaster").then(res => {
-                    this.classmasterList = res.data
+                this.$request.get("/employee/all").then(res => {
+                    this.classmasterList = res.data.filter(item=>item.job===1)
                 })
             })
 

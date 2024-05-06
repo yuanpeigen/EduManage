@@ -3,6 +3,7 @@ package edu.hitwh.homework.mapper;
 import edu.hitwh.homework.pojo.Student;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -40,5 +41,12 @@ public interface StudentMapper {
     @Insert("insert into students(name, gender, student_id, phone, top_degree, date_of_birth, class_id, update_time) " +
             " values(#{name},#{gender},#{studentId},#{phone},#{topDegree},#{dateOfBirth},#{classId},#{updateTime})")
     void insert(Student student);
+
+    /**
+     * 查询所有学生
+     * @return
+     */
+    @Select("select * from students")
+    List<Student> selectAll();
 }
 

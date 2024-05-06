@@ -50,5 +50,10 @@ public class StudentServiceImpl implements StudentService {
         studentMapper.insert(student);
     }
 
+    @Override
+    public List<Student> list() {
+        return studentMapper.selectAll();
+    }
+
 
 }
