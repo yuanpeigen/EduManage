@@ -30,8 +30,8 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void delete(Integer id) {
-        classMapper.deleteById(id);
+    public void delete(List<Integer> ids) {
+        classMapper.delete(ids);
     }
 
     @Override
@@ -42,5 +42,10 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public void update(EntityClass entityClass) {
         classMapper.update(entityClass);
+    }
+
+    @Override
+    public List<EntityClass> list() {
+        return classMapper.selectAll();
     }
 }

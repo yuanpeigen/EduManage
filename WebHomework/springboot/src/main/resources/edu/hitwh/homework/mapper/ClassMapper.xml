@@ -7,7 +7,7 @@
     <select id="list" resultType="edu.hitwh.homework.pojo.EntityClass">
         select * from classes
         <where>
-            <if test="className != null and name != ''">
+            <if test="className != null and className != ''">
                 class_name like concat('%', #{className}, '%')
             </if>
             <if test="begin != null and end  != null">
@@ -38,5 +38,12 @@
         </set>
         where class_id = #{classId}
     </update>
-
+    <!--  批量删除  -->
+    <delete id="delete">
+        delete from classes
+        where class_id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

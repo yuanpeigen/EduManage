@@ -1,11 +1,9 @@
 package edu.hitwh.homework.controller;
 
-import edu.hitwh.homework.pojo.Emp;
 import edu.hitwh.homework.pojo.EntityClass;
 import edu.hitwh.homework.pojo.PageBean;
 import edu.hitwh.homework.pojo.Result;
 import edu.hitwh.homework.service.ClassService;
-import edu.hitwh.homework.service.EmpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,10 +35,10 @@ public class ClassController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public Result delete(@PathVariable Integer id){
-        log.info("批量删除操作, ids:{}",id);
-        classService.delete(id);
+    @DeleteMapping("/{ids}")
+    public Result delete(@PathVariable List<Integer> ids){
+        log.info("批量删除操作, ids:{}",ids);
+        classService.delete(ids);
         return Result.success();
     }
 
@@ -52,13 +50,12 @@ public class ClassController {
     }
 
 
-//    //选择班主任
-//    @GetMapping("/all")
-//    public Result list(){
-//        log.info("查询所有员工信息");
-//        List<Emp> list = empService.list();
-//        return Result.success(list);
-//    }
+    @GetMapping("/all")
+    public Result list(){
+        log.info("查询所有员工信息");
+        List<EntityClass> list = classService.list();
+        return Result.success(list);
+    }
 
     @PutMapping
     public Result update(@RequestBody EntityClass entityClass){

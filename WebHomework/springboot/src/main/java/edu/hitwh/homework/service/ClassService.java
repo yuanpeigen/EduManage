@@ -4,6 +4,7 @@ import edu.hitwh.homework.pojo.EntityClass;
 import edu.hitwh.homework.pojo.PageBean;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 部门管理
@@ -18,9 +19,9 @@ public interface ClassService {
 
     /**
      * 批量删除
-     * @param id
+     * @param ids
      */
-    void delete(Integer id);
+    void delete(List<Integer> ids);
 
     /**
      * 新增班级
@@ -29,4 +30,10 @@ public interface ClassService {
     void save(EntityClass entityClass);
 
     void update(EntityClass entityClass);
+
+    /**
+     * 查询全部班级
+     * @return
+     */
+    List<EntityClass> list();
 }

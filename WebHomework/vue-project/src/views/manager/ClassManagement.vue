@@ -18,10 +18,11 @@
         </div>
         <div style="margin: 10px 0">
             <el-button type="primary" plain @click="handleAdd">新增班级</el-button>
+            <el-button type="danger" plain @click="delBatch">批量删除</el-button>
         </div>
 
         <el-table :data="tableData" stripe :header-cell-style="{ backgroundColor: 'aliceblue', color: '#666' }"
-            :row-key="getRowKeys">
+            @selection-change="handleSelectionChange" :row-key="getRowKeys">
             <el-table-column label="序号" align="center" type="index" :index="indexMethod"></el-table-column>
             <el-table-column prop="className" label="班级名称" align="center" sortable></el-table-column>
             <el-table-column prop="classroom" label="班级教室" align="center"></el-table-column>
@@ -102,8 +103,28 @@ export default {
         this.load()
     },
     methods: {
+        handleSelectionChange(rows) {
+            this.ids = rows.map(v => v.classId)
+        },
         search() {
             this.load()
+        },
+        delBatch() {
+            if (!this.ids.length) {
+                this.$message.warning('请选择数据')
+                return
+            }
+            this.$confirm('您确认批量删除这些数据吗？', '确认删除', { type: "warning" }).then(() => {
+                this.$request.delete(`/class/${this.ids}`).then(res => {
+
+                    if (res.code === 200) {   // 表示操作成功
+                        this.$message.success('操作成功')
+                        this.load()
+                    } else {
+                        this.$message.error(res.msg)  // 弹出错误的信息
+                    }
+                })
+            }).catch(() => { })
         },
         del(id) {
             this.$confirm('您确认删除吗？', '确认删除', { type: "warning" }).then(() => {
@@ -141,7 +162,7 @@ export default {
                 this.total = res.data.total
                 //请求班主任
                 this.$request.get("/employee/all").then(res => {
-                    this.classmasterList = res.data.filter(item=>item.job===1)
+                    this.classmasterList = res.data.filter(item => item.job === 1)
                 })
             })
 

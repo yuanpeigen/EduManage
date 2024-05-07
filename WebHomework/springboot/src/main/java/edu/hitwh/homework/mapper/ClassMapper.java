@@ -1,9 +1,9 @@
 package edu.hitwh.homework.mapper;
 
 import edu.hitwh.homework.pojo.EntityClass;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +16,7 @@ public interface ClassMapper {
 
     /**
      * 分页查询
+     *
      * @param className
      * @param begin
      * @param end
@@ -24,14 +25,15 @@ public interface ClassMapper {
     List<EntityClass> list(String className, LocalDate begin, LocalDate end);
 
     /**
-     * 根据id删除部门
-     * @param id
+     * 批量删除部门
+     *
+     * @param ids
      */
-    @Delete("delete from classes where class_id = #{id}")
-    void deleteById(Integer id);
+    void delete(List<Integer> ids);
 
     /**
      * 添加班级
+     *
      * @param entityClass
      */
     @Insert("insert into classes(class_name, classroom, start_time, finish_time, classmaster_id) " +
@@ -43,5 +45,12 @@ public interface ClassMapper {
      * @param entityClass
      */
     void update(EntityClass entityClass);
+
+    /**
+     * 查询全部班级
+     * @return
+     */
+    @Select("select * from classes")
+    List<EntityClass> selectAll();
 }
 
