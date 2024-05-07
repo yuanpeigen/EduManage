@@ -117,12 +117,12 @@
                 </el-form-item>
                 <el-form-item label="最高学历" prop="topDegree">
                     <el-select v-model="form.topDegree" placeholder="请选择最高学历">
-                        <el-option label="初中" value="1"></el-option>
-                        <el-option label="高中" value="2"></el-option>
-                        <el-option label="大专" value="2"></el-option>
-                        <el-option label="本科" value="2"></el-option>
-                        <el-option label="硕士" value="2"></el-option>
-                        <el-option label="博士" value="2"></el-option>
+                        <el-option label="初中" :value="1"></el-option>
+                        <el-option label="高中" :value="2"></el-option>
+                        <el-option label="大专" :value="3"></el-option>
+                        <el-option label="本科" :value="4"></el-option>
+                        <el-option label="硕士" :value="5"></el-option>
+                        <el-option label="博士" :value="6"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="违纪次数" prop="disciplinaryNumber" v-if="form.updateTime">
@@ -210,7 +210,6 @@ export default {
             // 执行违纪处分逻辑
             this.form.disciplinaryNumber += 1;
             this.form.disciplinaryScore += parseInt(this.disciplinaryForm.score);
-            console.log(8888888888888888, this.form.disciplinaryScore);
             this.save();
             this.disciplinaryVisible = false;
 
@@ -234,6 +233,7 @@ export default {
         handleEdit(row) {
             this.form = JSON.parse(JSON.stringify(row)); // 深拷贝数据，避免直接修改表格中的数据影响到弹窗中的数据
             this.fromVisible = true; // 打开编辑班级的弹窗
+            console.log(22222222222, this.form);
         },
         load() {
             let params = {
@@ -248,10 +248,8 @@ export default {
             }
             this.$request.get("class").then(res => {
                 this.classList = res.data.row
-                console.log(222222222222, this.classList);
                 this.$request.get(this.makeUrl(params)).then(res => {
                     this.tableData = res.data.row
-                    console.log(333333333333333, this.tableData);
                     this.total = res.data.total
                     //请求班主任
                 })

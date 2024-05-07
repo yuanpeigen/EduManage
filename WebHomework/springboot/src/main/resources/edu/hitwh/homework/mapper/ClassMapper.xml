@@ -14,9 +14,9 @@
                 and finish_time between #{begin} and #{end}
             </if>
         </where>
-        order by finish_time desc
+        ORDER BY class_name ASC
     </select>
-    <!--更新员工-->
+    <!--更新班级-->
     <update id="update">
         update classes
         <set>

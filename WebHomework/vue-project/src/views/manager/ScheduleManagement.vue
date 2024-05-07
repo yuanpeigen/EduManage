@@ -34,19 +34,19 @@
             @selection-change="handleSelectionChange" :row-key="getRowKeys">
             <el-table-column type="selection" width="55" align="center" reserve-selection></el-table-column>
             <el-table-column label="序号" align="center" type="index" :index="indexMethod"></el-table-column>
-            <el-table-column prop="courseId" label="课程名称" align="center" sortable>
+            <el-table-column prop="courseId" label="课程名称" align="center">
                 <template slot-scope="scope">
                     {{ getCourseName(scope.row.courseId) }}
                 </template>
             </el-table-column>
-            <el-table-column prop="classId" label="班级名称" align="center" sortable>
+            <el-table-column prop="classId" label="班级名称" align="center">
                 <template slot-scope="scope">
-                    {{ getClassName(scope.row.classId) }}
+                    {{ getClassName(scope.row.classIds) }}
                 </template>
             </el-table-column>
             <el-table-column prop="teacherId" label="教师名称" align="center">
                 <template slot-scope="scope">
-                    {{ getTeacherName(scope.row.teacherId) }}
+                    {{ getTeacherName(scope.row.teacherIds) }}
                 </template>
             </el-table-column>
 
@@ -73,13 +73,13 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="班级名称" prop="classId">
-                    <el-select v-model="form.classId" placeholder="请选择班级">
+                    <el-select v-model="form.classIds" multiple placeholder="请选择班级">
                         <el-option v-for="item in classes" :key="item.classId" :label="item.className"
                             :value="item.classId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="教师名称" prop="teacherId">
-                    <el-select v-model="form.teacherId" placeholder="请选择教师">
+                    <el-select v-model="form.teacherIds" multiple placeholder="请选择教师">
                         <el-option v-for="item in teachers" :key="item.employeeId" :label="item.name"
                             :value="item.employeeId"></el-option>
                     </el-select>
@@ -280,19 +280,26 @@ export default {
         indexMethod(index) {
             return index + 1 + this.pageSize * (this.pageNum - 1);
         },
-        getTeacherName(id) {
-            const foundElement = this.teachers.find(item => item.employeeId === id);
-            return foundElement.name;
+        getTeacherName(ids) {
+            let teacherString = [];
+            ids.forEach(id => {
+                const foundElement = this.teachers.find(item => item.employeeId === id);
+                teacherString.push(foundElement.name)
+            });
+            return teacherString.join(", ");
         },
         getCourseName(id) {
             const foundElement = this.courses.find(item => item.courseId === id);
 
             return foundElement.courseName;
         },
-        getClassName(id) {
-            const foundElement = this.classes.find(item => item.classId === id);
-            console.log(555555555555, this.classes, id);
-            return foundElement.className;
+        getClassName(ids) {
+            let classString = [];
+            ids.forEach(id => {
+                const foundElement = this.classes.find(item => item.classId === id);
+                classString.push(foundElement.className)
+            });
+            return classString.join(", ");
         },
     }
 };

@@ -50,7 +50,7 @@ public interface ClassMapper {
      * 查询全部班级
      * @return
      */
-    @Select("select * from classes")
+    @Select("select * from classes  ORDER BY class_name ASC")
     List<EntityClass> selectAll();
 }
 
