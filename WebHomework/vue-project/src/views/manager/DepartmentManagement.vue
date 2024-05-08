@@ -30,7 +30,7 @@
 
         <!-- 编辑或新增部门信息 -->
         <el-dialog title="部门信息" :visible.sync="fromVisible" width="30%">
-            <el-form :model="form" label-width="80px" style="padding-right: 20px" ref="formRef">
+            <el-form :model="form" :rules="rules" label-width="80px" style="padding-right: 20px" ref="formRef">
                 <el-form-item label="部门名称" prop="departmentName">
                     <el-input v-model="form.departmentName" placeholder="部门名称"></el-input>
                 </el-form-item>
@@ -52,7 +52,13 @@ export default {
             searchContext: '',
             fromVisible: false,
             form: {},
-            ids: []
+            ids: [],
+            rules: {
+                departmentName: [
+                    { required: true, message: '部门名称不能为空', trigger: 'blur' },
+                    { pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{2,10}$/, message: '长度应为2到10位,且只能包含汉字、字母和数字', trigger: 'blur' }
+                ]
+            }
         }
     },
     created() {

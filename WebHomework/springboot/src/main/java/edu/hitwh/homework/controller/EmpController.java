@@ -4,11 +4,14 @@ import edu.hitwh.homework.pojo.Emp;
 import edu.hitwh.homework.pojo.PageBean;
 import edu.hitwh.homework.pojo.Result;
 import edu.hitwh.homework.service.EmpService;
+import edu.hitwh.homework.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -63,5 +66,13 @@ public class EmpController {
         log.info("更新员工信息 : {}", emp);
         empService.update(emp);
         return Result.success();
+    }
+
+    @PostMapping("/upload")
+    public Result handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+
+        String url= FileUtils.uploadImg(file);//将传递的图片交给FileUtil处理
+
+        return Result.success(url);
     }
 }

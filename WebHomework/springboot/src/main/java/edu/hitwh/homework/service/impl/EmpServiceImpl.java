@@ -54,4 +54,6 @@ public class EmpServiceImpl implements EmpService {
     public List<Emp> list() {
         return empMapper.selectAll();
     }
+
+
 }

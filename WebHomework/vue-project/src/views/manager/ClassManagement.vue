@@ -48,7 +48,7 @@
             </el-pagination>
         </div>
         <el-dialog title="班级" :visible.sync="fromVisible">
-            <el-form :model="form" label-width="80px" ref="classForm">
+            <el-form :model="form" :rules="rules" label-width="80px" ref="classForm">
                 <el-form-item label="班级名称" prop="className">
                     <el-input v-model="form.className" placeholder="请输入班级名称"></el-input>
                 </el-form-item>
@@ -96,7 +96,25 @@ export default {
             ids: [],
             fromVisible: false,
             form: {},
-            classmasterList: []
+            classmasterList: [],
+            rules: {
+                className: [
+                    { required: true, message: '请输入班级名称', trigger: 'blur' },
+                    { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{4,30}$/, message: '班级名称只能包含汉字、数字和字母', trigger: 'blur' }
+                ],
+                classroom: [
+                    { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{1,20}$/, message: '教室名称只能包含汉字、数字和字母', trigger: 'blur' }
+                ],
+                startTime: [
+                    { required: true, message: '请选择开班时间', trigger: 'change' }
+                ],
+                finishTime: [
+                    { required: true, message: '请选择毕业时间', trigger: 'change' }
+                ],
+                classmasterId: [
+                    { required: true, message: '请选择班主任', trigger: 'change' }
+                ]
+            },
         }
     },
     created() {
@@ -194,7 +212,9 @@ export default {
                         } else {
                             this.$message.error(res.msg);
                         }
-                    });
+                    }).catch(() => {
+                        this.$message.error("该班级已存在!")
+                    })
                 }
             });
         },

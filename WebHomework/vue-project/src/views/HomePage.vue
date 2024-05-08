@@ -98,20 +98,21 @@ export default {
             isCollapse: false,  // 不收缩
             asideWidth: '200px',
             collapseIcon: 'el-icon-s-fold',
-            user: JSON.parse(localStorage.getItem('local-user') || '{}'),
+            user: localStorage.getItem('local-user')
         }
     },
-    // mounted() {   // 页面加载完成之后触发
-    //     if (!this.user.id) {   // 当前的浏览器没有用户信息
-    //         this.$router.push('/login')
-    //     }
-    // },
+    mounted() {
+        console.log(22222222, this.user);// 页面加载完成之后触发
+        if (!this.user) {   // 当前的浏览器没有用户信息
+            this.$router.push('/login')
+        }
+    },
     methods: {
         updateUser(user) {   // 获取子组件传过来的数据  更新当前页面的数据
             this.user = JSON.parse(JSON.stringify(user))  // 让父级的对象跟子级的对象毫无关联
         },
         logout() {
-            localStorage.removeItem('honey-user')  // 清除当前的token和用户数据
+            localStorage.removeItem('local-user')  // 清除当前的token和用户数据
             this.$router.push('/login')
         },
         handleCollapse() {

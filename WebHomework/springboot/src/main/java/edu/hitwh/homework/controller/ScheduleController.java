@@ -32,9 +32,17 @@ public class ScheduleController {
         return Result.success(pageBean);
     }
 
+    //查询所有安排
+    @GetMapping("/all")
+    public Result list(){
+        log.info("查询所有员工信息");
+        List<Schedule> list = scheduleService.list();
+        return Result.success(list);
+    }
+
 
     @DeleteMapping("/{ids}")
-    public Result delete(@PathVariable List<Schedule> ids){
+    public Result delete(@PathVariable List<Integer> ids){
         log.info("批量删除操作, ids:{}",ids);
         scheduleService.delete(ids);
         return Result.success();

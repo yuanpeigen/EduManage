@@ -86,7 +86,7 @@
         </div>
         <!-- 编辑个人信息 -->
         <el-dialog title="个人信息" :visible.sync="fromVisible" width="30%">
-            <el-form :model="form" label-width="80px" style="padding-right: 20px">
+            <el-form :model="form" :rules="rules" label-width="80px" style="padding-right: 20px">
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
                 </el-form-item>
@@ -174,6 +174,26 @@ export default {
             disciplinaryVisible: false,
             disciplinaryForm: {
                 score: 0
+            },
+            rules: {
+                name: [
+                    { required: true, message: '请输入姓名', trigger: 'blur' },
+                    { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{2,10}$/, message: '姓名只能包含汉字、数字和字母，长度为2-10', trigger: 'blur' }
+                ],
+                studentId: [
+                    { required: true, message: '请输入学号', trigger: 'blur' },
+                    { pattern: /^[a-zA-Z0-9]{10}$/, message: '学号必须为10位数字或字母', trigger: 'blur' }
+                ],
+                gender: [
+                    { required: true, message: '请选择性别', trigger: 'change' }
+                ],
+                phone: [
+                    { required: true, message: '请输入手机号', trigger: 'blur' },
+                    { pattern: /^[0-9]{11}$/, message: '手机号必须为11位数字', trigger: 'blur' }
+                ],
+                classId: [
+                    { required: true, message: '请选择班级', trigger: 'change' }
+                ]
             },
         }
     },

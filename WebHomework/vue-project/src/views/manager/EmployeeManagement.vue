@@ -71,14 +71,14 @@
             </el-pagination>
         </div>
         <el-dialog title="员工信息" :visible.sync="fromVisible">
-            <el-form :model="form" label-width="80px" ref="employeeForm">
+            <el-form :model="form" :rules="rules" label-width="80px" ref="employeeForm">
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="图片" prop="image">
-                    <el-upload class="avatar-uploader" action="#" :show-file-list="false"
-                        :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                        <img v-if="form.image" :src="form.image" class="avatar">
+                    <el-upload class="avatar-uploader" action="api/employee/upload" :show-file-list="false"
+                        :before-upload="beforeAvatarUpload" :on-success="handleAvatarSuccess">
+                        <img v-if="form.image" :src="form.image" class="avatar" />
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-form-item>
@@ -96,9 +96,8 @@
                         <el-option label="教研主管" :value="4"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="入职日期" prop="entryDate">
-                    <el-date-picker value="form.entrydate" v-model="form.entrydate" type="date"
-                        placeholder="请选择入职日期"></el-date-picker>
+                <el-form-item label="入职日期" prop="entrydate">
+                    <el-date-picker v-model="form.entrydate" type="date" placeholder="请选择入职日期"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="归属部门" prop="department">
                     <el-select v-model="form.departmentId" placeholder="请选择部门">
@@ -106,7 +105,6 @@
                             :value="dept.departmentId"></el-option>
                     </el-select>
                 </el-form-item>
-
 
                 <!-- 按钮 -->
                 <el-form-item>
@@ -134,7 +132,16 @@ export default {
             ids: [],
             fromVisible: false,
             form: {},
-            departmentList: []
+            departmentList: [],
+            rules: {
+                name: [
+                    { required: true, message: '请输入姓名', trigger: 'blur' },
+                    { pattern: /^[\u4E00-\u9FA5]{2,20}$/, message: '姓名只能包含字母或数字,长度为2-20位', trigger: 'blur' }
+                ],
+                gender: [
+                    { required: true, message: '请选择性别', trigger: 'change' }
+                ]
+            },
         }
     },
     created() {
@@ -258,9 +265,59 @@ export default {
             }
             const url = `/employee?${paramsList.join("")}`;
             return url
+        },
+        handleAvatarSuccess(response, file) {
+            this.form.image = URL.createObjectURL(file.raw);
+        },
+        beforeAvatarUpload(file) {
+            const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPGorPNG) {
+                this.$message.error('上传头像图片只能是 JPG/PNG/JPEG 格式!');
+                return false;
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+                return false;
+            }
+            return true;
+        },
+        upload() {
+            this.$request({
+                url: 'employee/upload',
+                method: 'post'
+            })
         }
     }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
+</style>

@@ -20,7 +20,7 @@ public interface ScheduleService {
      * 批量删除
      * @param ids
      */
-    void delete(List<Schedule> ids);
+    void delete(List<Integer> ids);
 
     /**
      * 新增班级
@@ -29,4 +29,10 @@ public interface ScheduleService {
     void save(Schedule schedule);
 
     void update(Schedule schedule);
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List<Schedule> list();
 }

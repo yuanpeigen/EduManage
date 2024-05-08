@@ -4,19 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hitwh.homework.mapper.ScheduleMapper">
     <!--条件查询-->
-    <select id="list" resultType="edu.hitwh.homework.pojo.Schedule">
-        select * from course_schedules
+    <select id="list" resultType="edu.hitwh.homework.pojo.ScheduleCombine">
+        select
+        course_id,
+        GROUP_CONCAT(DISTINCT class_id ORDER BY class_id ASC) AS class_ids,
+        GROUP_CONCAT(DISTINCT teacher_id ORDER BY teacher_id ASC) AS teacher_ids
+        from
+        course_schedules
         <where>
             <if test="courseId != null and courseId != ''">
                 course_id = #{courseId}
             </if>
             <if test="teacherId != null and teacherId != ''">
-                teacher_id = #{teacherId}
+               and teacher_id = #{teacherId}
             </if>
             <if test="classId != null and classId != ''">
-                class_id = #{classId}
+               and class_id = #{classId}
             </if>
         </where>
+        group by course_id
     </select>
     <!--更新安排-->
     <update id="update">

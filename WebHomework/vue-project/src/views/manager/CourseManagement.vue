@@ -42,7 +42,7 @@
             </el-pagination>
         </div>
         <el-dialog title="课程信息" :visible.sync="fromVisible">
-            <el-form :model="form" label-width="80px" ref="courseForm">
+            <el-form :model="form" :rules="rules" label-width="80px" ref="courseForm">
                 <el-form-item label="课程名称" prop="courseName">
                     <el-input v-model="form.courseName" placeholder="请输入课程名称"></el-input>
                 </el-form-item>
@@ -89,6 +89,11 @@ export default {
             ids: [],
             fromVisible: false,
             form: {},
+            rules: {
+                courseName: [
+                    { required: true, message: '请输入课程名称', trigger: 'blur' }
+                ]
+            },
         }
     },
     created() {

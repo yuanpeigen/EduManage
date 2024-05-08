@@ -17,7 +17,7 @@
         ORDER BY class_name ASC
     </select>
     <!--更新班级-->
-    <update id="update">
+    <update id="update" parameterType="edu.hitwh.homework.pojo.EntityClass">
         update classes
         <set>
             <if test="className != null and className != ''">
@@ -26,10 +26,10 @@
             <if test="classroom != null">
                 classroom = #{classroom},
             </if>
-            <if test="startTime != null and startTime != ''">
+            <if test="startTime != null">
                 start_time = #{startTime},
             </if>
-            <if test="finishTime != null and finishTime != ''">
+            <if test="finishTime != null">
                 finish_time = #{finishTime},
             </if>
             <if test="classmasterId != null">
