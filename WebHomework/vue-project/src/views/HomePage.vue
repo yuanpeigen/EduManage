@@ -5,7 +5,7 @@
             <el-aside :width="asideWidth" style="min-height: 100vh; background-color: #001529">
                 <div style="height: 60px; color: white; display: flex; align-items: center; justify-content: center">
                     <!-- <img src="@/assets/logo1.png" alt="" style="width: 40px; height: 40px"> -->
-                    <span class="logo-title" v-show="!isCollapse">MySystem</span>
+                    <span class="logo-title" v-show="!isCollapse">教学管理系统</span>
                 </div>
 
                 <el-menu :collapse="isCollapse" :collapse-transition="false" router background-color="#001529"
@@ -62,19 +62,18 @@
                 <el-header>
                     <i :class="collapseIcon" style="font-size: 26px" @click="handleCollapse"></i>
                     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-left: 20px">
-                        <el-breadcrumb-item :to="{ path: '/' }">主页</el-breadcrumb-item>
-                        <el-breadcrumb-item :to="{ path: $route.path }">{{ $route.meta.name }}</el-breadcrumb-item>
+                        <el-breadcrumb-item>主页</el-breadcrumb-item>
+                        <el-breadcrumb-item>{{ $route.meta.name }}</el-breadcrumb-item>
                     </el-breadcrumb>
 
                     <div style="flex: 1; width: 0; display: flex; align-items: center; justify-content: flex-end">
                         <el-dropdown placement="bottom">
                             <div style="display: flex; align-items: center; cursor: default">
-                                <img :src="user.avatar || '@/assets/avatar.png'" alt=""
+                                <img src="../assets/avatar.png" alt=""
                                     style="width: 40px; height: 40px; border-radius: 50%; margin: 0 5px">
                                 <span>{{ user.name }}</span>
                             </div>
                             <el-dropdown-menu slot="dropdown">
-
                                 <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>

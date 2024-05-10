@@ -28,7 +28,6 @@
 </template>
 
 <script>
-
 export default {
   name: "LoginPage",
   components: {},
@@ -53,14 +52,12 @@ export default {
     login() {
       this.$refs.loginRef.validate((valid) => {
         if (valid) {
-          console.log(111111111);
-          // 假设你已经有了一个API调用服务$this.$request
+          // 假设你已经有了一个 API 调用服务$this.$request
           this.$request.post("/login", {
             id: this.user.userID,
             password: this.user.password
           }).then((res) => {
             if (res.code === 200) {
-
               localStorage.setItem("local-user", res.data);
               this.$router.push("/home");
               this.$message.success("登录成功");

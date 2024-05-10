@@ -100,7 +100,7 @@ export default {
             rules: {
                 className: [
                     { required: true, message: '请输入班级名称', trigger: 'blur' },
-                    { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{4,30}$/, message: '班级名称只能包含汉字、数字和字母', trigger: 'blur' }
+                    { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{4,30}$/, message: '班级名称长度应为4到30位,且只能包含汉字、字母和数字', trigger: 'blur' }
                 ],
                 classroom: [
                     { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{1,20}$/, message: '教室名称只能包含汉字、数字和字母', trigger: 'blur' }

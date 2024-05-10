@@ -76,8 +76,8 @@
                     <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="图片" prop="image">
-                    <el-upload class="avatar-uploader" action="api/employee/upload" :show-file-list="false"
-                        :before-upload="beforeAvatarUpload" :on-success="handleAvatarSuccess">
+                    <el-upload class="avatar-uploader" :action="'http://localhost:8080/employee/upload'"
+                        :show-file-list="false" :before-upload="beforeAvatarUpload" :on-success="handleAvatarSuccess">
                         <img v-if="form.image" :src="form.image" class="avatar" />
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
@@ -142,6 +142,7 @@ export default {
                     { required: true, message: '请选择性别', trigger: 'change' }
                 ]
             },
+            headers: { 'Content-Type': 'multipart/form-data' }
         }
     },
     created() {
@@ -165,6 +166,8 @@ export default {
                     } else {
                         this.$message.error(res.msg)  // 弹出错误的信息
                     }
+                }).catch(() => {
+                    this.$message.error("删除的员工中存在某班班主任或还有教学安排,不能删除")  // 弹出错误的信息
                 })
             }).catch(() => { })
         },
@@ -178,7 +181,7 @@ export default {
                         this.$message.error(res.msg)  // 弹出错误的信息
                     }
                 }).catch(() => {
-                    this.$message.error("该人已是某班班主任,不能删除")  // 弹出错误的信息
+                    this.$message.error("该人已是某班班主任或还有教学安排,不能删除")  // 弹出错误的信息
                 })
             }).catch()
         },
@@ -267,7 +270,8 @@ export default {
             return url
         },
         handleAvatarSuccess(response, file) {
-            this.form.image = URL.createObjectURL(file.raw);
+            console.log(file.response);
+            this.form.image = file.response.data;
         },
         beforeAvatarUpload(file) {
             const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
@@ -283,12 +287,6 @@ export default {
             }
             return true;
         },
-        upload() {
-            this.$request({
-                url: 'employee/upload',
-                method: 'post'
-            })
-        }
     }
 }
 </script>

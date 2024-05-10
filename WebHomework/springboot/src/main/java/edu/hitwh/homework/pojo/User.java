@@ -10,6 +10,4 @@ import lombok.NoArgsConstructor;
 public class User {
     private String id;//管理员id
     private String password;//管理员密码
-    private String name;
-    private Integer status;//状态
 }

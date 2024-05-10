@@ -10,4 +10,11 @@ public interface LoginService {
      * @return
      */
     User login(User user);
+
+    /**
+     * 注册
+     * @param userID
+     * @param password
+     */
+    void register(User user);
 }

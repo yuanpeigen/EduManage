@@ -8,9 +8,9 @@
                 <el-form :model="user" style="width: 80%" :rules="rules" ref="registerRef">
                     <div style="font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 20px">注册
                     </div>
-                    <el-form-item prop="userID">
+                    <el-form-item prop="id">
                         <el-input prefix-icon="el-icon-user" size="medium" placeholder="请输入账号"
-                            v-model="user.userID"></el-input>
+                            v-model="user.id"></el-input>
                     </el-form-item>
                     <el-form-item prop="password">
                         <el-input prefix-icon="el-icon-lock" size="medium" show-password placeholder="请输入密码"
@@ -51,12 +51,12 @@ export default {
         }
         return {
             user: {
-                userID: '',
+                id: '',
                 password: '',
                 confirmPass: ''
             },
             rules: {
-                userID: [
+                id: [
                     { required: true, message: '请输入账号', trigger: 'blur' },
                 ],
                 password: [
@@ -73,14 +73,14 @@ export default {
     },
     methods: {
         register() {
-            this.$ref.registerRef.validate((valid) => {
+            this.$refs.registerRef.validate((valid) => {
                 if (valid) {
                     // 假设你已经有了一个API调用服务$this.$request
                     this.$request.post('/register', {
-                        userID: this.user.userID,
+                        id: this.user.id,
                         password: this.user.password
                     }).then(res => {
-                        if (res.code === '200') {
+                        if (res.code === 200) {
                             this.$router.push('/login')
                             this.$message.success('注册成功')
                         } else {

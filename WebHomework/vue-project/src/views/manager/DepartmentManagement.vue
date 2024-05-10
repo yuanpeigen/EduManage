@@ -1,13 +1,8 @@
 <template>
     <div>
-        <div>
-            <el-input style="width: 200px; margin: 0 5px" placeholder="查询" v-model="searchContext" clearable></el-input>
-            <el-button type="primary" @click="search">查询</el-button>
-        </div>
         <div style="margin: 10px 0">
             <el-button type="primary" plain @click="handleAdd">新增</el-button>
         </div>
-
         <el-table width="80%" :data="tableData" stripe
             :header-cell-style="{ backgroundColor: 'aliceblue', color: '#666' }"
             @selection-change="handleSelectionChange" :row-key="getRowKeys">
@@ -49,7 +44,6 @@ export default {
     data() {
         return {
             tableData: [],
-            searchContext: '',
             fromVisible: false,
             form: {},
             ids: [],
@@ -90,11 +84,7 @@ export default {
             })
         },
         load() {
-            this.$request.get('/departments', {
-                params: {
-                    departmentName: this.searchContext
-                }
-            }).then(res => {
+            this.$request.get('/departments').then(res => {
                 //处理数据
                 this.tableData = res.data
             })
@@ -125,9 +115,6 @@ export default {
         handleSelectionChange(rows) {
             this.ids = rows.map(v => v.departmentId)
         },
-        search() {
-            this.load()
-        }
     }
 }
 </script>

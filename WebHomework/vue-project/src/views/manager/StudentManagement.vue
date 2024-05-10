@@ -126,10 +126,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="违纪次数" prop="disciplinaryNumber" v-if="form.updateTime">
-                    <el-input v-model="form.disciplinaryNumber" placeholder="违纪次数"></el-input>
+                    <el-input v-model="form.disciplinaryNumber" type="number" placeholder="违纪次数"></el-input>
                 </el-form-item>
                 <el-form-item label="违纪扣分" prop="disciplinaryScore" v-if="form.updateTime">
-                    <el-input v-model="form.disciplinaryScore" placeholder="违纪扣分"></el-input>
+                    <el-input v-model="form.disciplinaryScore" type="number" placeholder="违纪扣分"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -178,7 +178,7 @@ export default {
             rules: {
                 name: [
                     { required: true, message: '请输入姓名', trigger: 'blur' },
-                    { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{2,10}$/, message: '姓名只能包含汉字、数字和字母，长度为2-10', trigger: 'blur' }
+                    { pattern: /^[\u4E00-\u9FA5a-zA-Z0-9]{2,10}$/, message: '姓名只能包含汉字、数字和字母,长度为2-10', trigger: 'blur' }
                 ],
                 studentId: [
                     { required: true, message: '请输入学号', trigger: 'blur' },
@@ -290,6 +290,10 @@ export default {
             this.ids = rows.map(v => v.studentId)
         },
         save() {
+            if (this.form.updateTime) {
+                this.form.disciplinaryNumber = parseInt(this.form.disciplinaryNumber)
+                this.form.disciplinaryScore = parseInt(this.form.disciplinaryScore)
+            }
             this.$request({
                 url: '/student',
                 method: this.form.updateTime ? 'PUT' : 'POST',

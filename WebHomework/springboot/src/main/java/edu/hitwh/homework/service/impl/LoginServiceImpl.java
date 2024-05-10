@@ -17,4 +17,10 @@ public class LoginServiceImpl implements LoginService {
     public User login(User user) {
         return loginMapper.login(user);
     }
+
+    @Override
+    public void register(User user) {
+
+        loginMapper.register(user);
+    }
 }

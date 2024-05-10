@@ -4,7 +4,7 @@ import edu.hitwh.homework.pojo.Emp;
 import edu.hitwh.homework.pojo.PageBean;
 import edu.hitwh.homework.pojo.Result;
 import edu.hitwh.homework.service.EmpService;
-import edu.hitwh.homework.utils.FileUtils;
+import edu.hitwh.homework.utils.AliOSSUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,23 +30,23 @@ public class EmpController {
                        @RequestParam(defaultValue = "5") Integer pageSize,
                        String name, Short gender,
                        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
-                       @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end){
-        log.info("分页查询, 参数: {},{},{},{},{},{}",pageNum,pageSize,name,gender,begin,end);
+                       @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
+        log.info("分页查询, 参数: {},{},{},{},{},{}", pageNum, pageSize, name, gender, begin, end);
         //调用service分页查询
-        PageBean pageBean = empService.page(pageNum,pageSize,name,gender,begin,end);
+        PageBean pageBean = empService.page(pageNum, pageSize, name, gender, begin, end);
         return Result.success(pageBean);
     }
 
 
     @DeleteMapping("/{ids}")
-    public Result delete(@PathVariable List<Integer> ids){
-        log.info("批量删除操作, ids:{}",ids);
+    public Result delete(@PathVariable List<Integer> ids) {
+        log.info("批量删除操作, ids:{}", ids);
         empService.delete(ids);
         return Result.success();
     }
 
     @PostMapping
-    public Result save(@RequestBody Emp emp){
+    public Result save(@RequestBody Emp emp) {
         log.info("新增员工, emp: {}", emp);
         empService.save(emp);
         return Result.success();
@@ -55,24 +55,28 @@ public class EmpController {
 
     //查询所有员工
     @GetMapping("/all")
-    public Result list(){
+    public Result list() {
         log.info("查询所有员工信息");
         List<Emp> list = empService.list();
         return Result.success(list);
     }
 
     @PutMapping
-    public Result update(@RequestBody Emp emp){
+    public Result update(@RequestBody Emp emp) {
         log.info("更新员工信息 : {}", emp);
         empService.update(emp);
         return Result.success();
     }
 
+    @Autowired
+    private AliOSSUtils aliOSSUtils;
+
     @PostMapping("/upload")
     public Result handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
 
-        String url= FileUtils.uploadImg(file);//将传递的图片交给FileUtil处理
-
+        log.info("文件上传,文件名:{}", file.getOriginalFilename());
+        String url = aliOSSUtils.upload(file);
+        log.info("文件上传成功,url:{}", url);
         return Result.success(url);
     }
 }
