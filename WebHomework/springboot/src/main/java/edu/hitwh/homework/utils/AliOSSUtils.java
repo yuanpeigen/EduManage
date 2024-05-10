@@ -14,8 +14,8 @@ import java.util.UUID;
 public class AliOSSUtils {
 
     private String endpoint = "https://oss-cn-beijing.aliyuncs.com";
-    private String accessKeyId = "LTAI5t7oTbqAWRSH8xRFLvbY";
-    private String accessKeySecret = "WHVN5rMCi4r3CWlPCZN46gcjIHnJf9";
+    private String accessKeyId = "";
+    private String accessKeySecret = "";
     private String bucketName = "zombie-web";
 
     /**
